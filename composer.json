@@ -10,6 +10,9 @@
             "homepage": "http://github.com/bauer01"
         }
     ],
+    "repositories": [
+        { "type": "vcs", "url": "https://github.com/vp/unimapper.git"}
+    ],
     "require": {
         "php": ">=5.4.0",
         "ext-curl": "*"
@@ -17,7 +20,7 @@
     "require-dev": {
         "nette/tester": "~1.0",
         "mockery/mockery": "~0.9.0",
-        "unimapper/unimapper": "@dev",
+        "unimapper/unimapper": "dev-associations as 1.2.x-dev",
         "nette/nette": "~2.0",
         "squizlabs/php_codesniffer": "~2.0"
     },
