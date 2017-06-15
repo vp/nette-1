@@ -1,7 +1,6 @@
-nette:
-    application:
-        mapping:
-            *: UniMapper\Nette\Tests\*Module\*Presenter
+application:
+    mapping:
+        *: UniMapper\Nette\Tests\*Module\*Presenter
 
 extensions:
     unimapper: UniMapper\Nette\Extension
@@ -12,6 +11,12 @@ unimapper:
         entity: 'UniMapper\Nette\Tests\Model\Entity\*'
     customQueries:
         - UniMapper\Nette\Tests\Model\Query\Custom
+    entity:
+        iterator:
+            public: true
+            defined: false
+            computed: false
+            excludeNull: false
 
 services:
     simpleRepository: UniMapper\Nette\Tests\Model\Repository\SimpleRepository

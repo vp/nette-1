@@ -24,6 +24,19 @@ class ExtensionTest extends Tester\TestCase
         Assert::type("UniMapper\Nette\Tests\Model\Query\Custom", Entity\Simple::query()->custom());
     }
 
+    public function testEntityIteratorOptions()
+    {
+        Assert::equal(
+            [
+                'public' => TRUE,
+                'defined' => FALSE,
+                'computed' => FALSE,
+                'excludeNull' => FALSE,
+            ],
+            \UniMapper\Entity\Iterator::$ITERATE_OPTIONS
+        );
+    }
+
 }
 
 $testCase = new ExtensionTest($configurator->createContainer());

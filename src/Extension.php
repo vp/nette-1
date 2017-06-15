@@ -36,7 +36,15 @@ class Extension extends CompilerExtension
             "repository" => null,
             "entity" => null
         ],
-        "customQueries" => []
+        "customQueries" => [],
+        "entity" => [
+            "iterator" => [
+                "public" => false,
+                "defined" => true,
+                "computed" => true,
+                "excludeNull" => true
+            ]
+        ]
     ];
 
     /**
@@ -152,6 +160,15 @@ class Extension extends CompilerExtension
         if ($config["profiler"]) {
             $initialize->addBody('UniMapper\QueryBuilder::beforeRun(array(?, "beforeQueryCallback"));', array(get_class()));
             $initialize->addBody('UniMapper\QueryBuilder::afterRun(array(?, "afterQueryCallback"));', array(get_class()));
+        }
+
+        if (isset($config['entity'])) {
+            if (isset($config['entity']['iterator'])) {
+                $initialize->addBody(
+                    'UniMapper\Entity\Iterator::$ITERATE_OPTIONS = array_merge(UniMapper\Entity\Iterator::$ITERATE_OPTIONS,?);',
+                    [$config['entity']['iterator']]
+                );
+            }
         }
     }
 
