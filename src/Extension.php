@@ -43,8 +43,10 @@ class Extension extends CompilerExtension
                 "defined" => true,
                 "computed" => true,
                 "excludeNull" => true
-            ]
-        ]
+            ],
+            "options" => []
+        ],
+        "repositoryList" => false
     ];
 
     /**
@@ -76,6 +78,11 @@ class Extension extends CompilerExtension
             // Register on presenter events
             $builder->getDefinition('application')
                 ->addSetup('?->onResponse[] = ?', array('@self', array($this->prefix('@panel'), 'onResponse')));
+        }
+
+        if ($config['repositoryList']) {
+            $builder->addDefinition($this->prefix("repositories"))
+                ->setClass("UniMapper\Nette\RepositoryList");
         }
     }
 
@@ -128,6 +135,25 @@ class Extension extends CompilerExtension
                     [[$this->prefix("@panel"), "getTab"]]
                 );
         }
+
+        if ($config['repositoryList']) {
+            foreach ($builder->getDefinitions() as $serviceName => $serviceDefinition) {
+
+                // Skip dynamic services
+                if (!$serviceDefinition->factory && $serviceDefinition->class === null) {
+                    continue;
+                }
+
+                $class = $serviceDefinition->class !== null ? $serviceDefinition->class : $serviceDefinition->factory->entity;
+
+                // Register repository to API's repository list
+                if (class_exists($class) && is_subclass_of($class, "UniMapper\Repository")) {
+
+                    $builder->getDefinition($this->prefix("repositories"))
+                        ->addSetup('$service[] = $this->getService(?)', [$serviceName]);
+                }
+            }
+        }
     }
 
     public function afterCompile(ClassType $class)
@@ -168,6 +194,12 @@ class Extension extends CompilerExtension
                     'UniMapper\Entity\Iterator::$ITERATE_OPTIONS = array_merge(UniMapper\Entity\Iterator::$ITERATE_OPTIONS,?);',
                     [$config['entity']['iterator']]
                 );
+            }
+        }
+
+        if ($config['entity']['options']) {
+            foreach ($config['entity']['options'] as $key => $class) {
+                $initialize->addBody('UniMapper\Entity\Reflection\Annotation::registerOption(?, ?);', [$key, $class]);
             }
         }
     }
