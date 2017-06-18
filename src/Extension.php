@@ -44,7 +44,8 @@ class Extension extends CompilerExtension
                 "computed" => true,
                 "excludeNull" => true
             ],
-            "options" => []
+            "options" => [],
+            "magicCollectionCreation" => false,
         ],
         "repositoryList" => false
     ];
@@ -201,6 +202,10 @@ class Extension extends CompilerExtension
             foreach ($config['entity']['options'] as $key => $class) {
                 $initialize->addBody('UniMapper\Entity\Reflection\Annotation::registerOption(?, ?);', [$key, $class]);
             }
+        }
+
+        if ($config['entity']['magicCollectionCreation']) {
+            $initialize->addBody('UniMapper\Entity::$_MAGIC_COLLECTION_CREATION = true;');
         }
     }
 
