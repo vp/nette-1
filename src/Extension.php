@@ -46,6 +46,7 @@ class Extension extends CompilerExtension
             ],
             "options" => [],
             "magicCollectionCreation" => false,
+            "associations" => []
         ],
         "repositoryList" => false
     ];
@@ -206,6 +207,12 @@ class Extension extends CompilerExtension
 
         if ($config['entity']['magicCollectionCreation']) {
             $initialize->addBody('UniMapper\Entity::$_MAGIC_COLLECTION_CREATION = true;');
+        }
+
+        if ($config['entity']['associations']) {
+            foreach ($config['entity']['associations'] as $key => $value) {
+                $initialize->addBody('UniMapper\Association::registerAssocType(?, ?);', [$key, $value]);
+            }
         }
     }
 
