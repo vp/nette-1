@@ -46,7 +46,8 @@ class Extension extends CompilerExtension
             ],
             "options" => [],
             "magicCollectionCreation" => false,
-            "associations" => []
+            "associations" => [],
+            "computed" => [],
         ],
         "repositoryList" => false
     ];
@@ -212,6 +213,12 @@ class Extension extends CompilerExtension
         if ($config['entity']['associations']) {
             foreach ($config['entity']['associations'] as $key => $value) {
                 $initialize->addBody('UniMapper\Association::registerAssocType(?, ?);', [$key, $value]);
+            }
+        }
+
+        if ($config['entity']['computed']) {
+            foreach ($config['entity']['computed'] as $key => $value) {
+                $initialize->addBody('UniMapper\Entity\Reflection\Property\Option\Computed::registerFactory(?, $this->getService(?));', [$key, $value]);
             }
         }
     }
