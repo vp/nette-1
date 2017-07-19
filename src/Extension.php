@@ -218,7 +218,7 @@ class Extension extends CompilerExtension
 
         if ($config['entity']['computed']) {
             foreach ($config['entity']['computed'] as $key => $value) {
-                $initialize->addBody('UniMapper\Entity\Reflection\Property\Option\Computed::registerFactory(?, $this->getService(?));', [$key, $value]);
+                $initialize->addBody('UniMapper\Entity\Reflection\Property\Option\Computed::registerFactory(?, function () { return $this->getService(?); });', [$key, $value]);
             }
         }
     }
