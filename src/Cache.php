@@ -26,13 +26,15 @@ class Cache implements ICache
         $this->netteCache = new Caching\Cache($storage, "UniMapper.Cache");
     }
 
-    public function load($key)
+    public function load(\UniMapper\Query\ICachableQuery $query)
     {
-        return $this->netteCache->load($key);
+        return $this->netteCache->load($query->getCacheKey());
     }
 
-    public function save($key, $data, array $options = [])
+    public function save(\UniMapper\Query\ICachableQuery $query, $data, array $options = [])
     {
+        $key = $query->getCacheKey();
+
         $netteOptions = [];
         foreach ($options as $type => $option) {
             if (!isset($this->options[$type])) {
