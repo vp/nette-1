@@ -125,8 +125,9 @@ class Extension extends CompilerExtension
             ['UniMapper\Nette\Extension::renderException']
         );
 
+        
         // Setup panel in debug mode
-        if ($builder->parameters["debugMode"] && $config["panel"]) {
+        if (isset($builder->parameters["debugMode"]) && $builder->parameters["debugMode"] && $config["panel"]) {
 
             $builder->getDefinition($this->prefix("panel"))
                 ->addSetup($panelDef, ['@self']);
@@ -143,11 +144,11 @@ class Extension extends CompilerExtension
             foreach ($builder->getDefinitions() as $serviceName => $serviceDefinition) {
 
                 // Skip dynamic services
-                if (!$serviceDefinition->factory && $serviceDefinition->class === null) {
+                if (!$serviceDefinition->getType()) {
                     continue;
                 }
 
-                $class = $serviceDefinition->class !== null ? $serviceDefinition->class : $serviceDefinition->factory->entity;
+                $class = $serviceDefinition->getType();
 
                 // Register repository to API's repository list
                 if (class_exists($class) && is_subclass_of($class, "UniMapper\Repository")) {

@@ -12,7 +12,7 @@ if (!class_exists('Nette\Utils\ArrayHash')) {
 class RepositoryList extends ArrayHash
 {
 
-    public function offsetSet($key, $value)
+    public function offsetSet($key, $value): void
     {
         if (!$value instanceof \UniMapper\Repository) {
             throw new \Exception("Repository must be instance of UniMapper\Repository!");
